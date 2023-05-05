@@ -1,0 +1,60 @@
+extends KinematicBody2D
+
+#General initilization of variables is of the syntax:
+#<keyword> <variable_name> : <data_type> = <value>
+
+#stats 
+
+var score : int=0
+
+#Physics
+
+var speed : int=200
+var jumpforce : int=600
+var gravity : int=800
+
+var vel : Vector2 = Vector2() #vector2 is a built-in function of 2D scripting
+var grounded : bool=false
+
+
+#Components
+onready var sprite = $adventurer_idle # Onready makes the script run readily when called and Adventure idle is the name of our sprite used.
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+#******IMPORTANT FUNCTION AHEAD GO WITH FULL MIND!!!*******
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	#Reset Velocity to 0
+	vel.x=0
+	
+	#Movement Inputs
+	
+	if Input.is_action_pressed("move_left"):
+		vel.x-=speed
+	if Input.is_action_pressed("move_right"):
+		vel.x+=speed
+		
+	#Applying the velocity
+	
+	vel = move_and_slide(vel, Vector2.UP)
+	
+	#Applying Gravity
+	vel.y += gravity*delta
+	
+	#To define jump
+	if Input.is_action_pressed("jump") and is_on_floor():
+		vel.y -= jumpforce
+		
+		
+	#Now to invert the sprite inorder to look good
+	if vel.x > 0:
+		sprite.flip_h = false
+	if vel.x < 0:
+		sprite.flip_h = true
+		
+		
+	
